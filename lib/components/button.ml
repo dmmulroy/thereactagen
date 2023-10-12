@@ -86,17 +86,22 @@ let classes_of_props ~variant ~size =
 
 let make
   ?(classes = [])
+  ?(attributes = [])
   ?(variant = `Primary)
   ?(size = `Medium)
-  ~hx_route
-  ~hx_target
-  ~children
+  ~(* ~hx_route *)
+   (* ~hx_target *)
+   children
   ()
   =
-  let hx_attrs =
-    [ `Route hx_route; `Target hx_target ] |> List.map Attributes.Htmx.to_attr
-  in
+  (* let hx_attrs =
+     [ `Route hx_route; `Target hx_target ] |> List.map Attributes.Htmx.to_attr
+     in *)
   let classes' = classes @ classes_of_props ~variant ~size in
-  let attrs = hx_attrs @ [ a_class classes' ] in
+  let attrs = attributes @ [ a_class classes' ] in
   button ~a:attrs children
 ;;
+
+
+let _ =
+  let hx_attrs = []

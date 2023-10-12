@@ -17,9 +17,10 @@ type variant =
 val make
   :  ?classes:string list
   -> ?variant:variant
-  -> ?size:size
-  -> hx_route:Attributes.Htmx.route
-  -> hx_target:Hx.TargetType.t
+  -> ?size:
+       size
+       (* -> hx_route:Attributes.Htmx.route *)
+       (* -> hx_target:Hx.TargetType.t *)
   -> children:children
   -> unit
   -> Html_types.button elt
