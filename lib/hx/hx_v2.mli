@@ -250,23 +250,24 @@ module Trigger : sig
 end
 
 module Attributes : sig
-  (* Verb attributes *)
+  (* Core attributes *)
+  val boost : bool -> 'a attrib
+  val css : Css.t -> 'a attrib
   val delete : [< Verb.t ] -> 'a attrib
   val get : [< Verb.t ] -> 'a attrib
+  val on : string -> 'a attrib
   val patch : [< Verb.t ] -> 'a attrib
   val post : [< Verb.t ] -> 'a attrib
+  val push_url : [ `Bool of bool | `Uri of Uri.t ] -> 'a attrib
   val put : [< Verb.t ] -> 'a attrib
+  val select : Css.Selector.t -> 'a attrib
+  val select_oob : ?swap_strategy:Swap.strategy -> Css.Selector.t -> 'a attrib
+  val swap : Swap.t -> 'a attrib
+  val target : Target.t -> 'a attrib
+  val trigger : Trigger.t -> 'a attrib
+  val vals : string * string list -> 'a attrib
   val verb : [< Verb.t ] -> 'a attrib
 
-  (* CSS attribute(s) *)
-  val css : Css.t -> 'a attrib
-
-  (* Swap attribute(s) *)
-  val swap : Swap.t -> 'a attrib
-
-  (* Target attribute(s) *)
-  val target : Target.t -> 'a attrib
-
-  (* Trigger attribute(s) *)
-  val trigger : Trigger.t -> 'a attrib
+  (* Extension attributes *)
+  val include' : Css.Selector.t -> 'a attrib
 end
