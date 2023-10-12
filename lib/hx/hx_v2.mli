@@ -1,9 +1,5 @@
 open Tyxml_html
 
-type t
-
-(* TODO: make all to_attr functions opaque and only impl in ml *)
-
 module Verb : sig
   type t =
     [ `Delete of Uri.t
@@ -17,6 +13,10 @@ module Verb : sig
   val to_attr : t -> 'a attrib
 
   val uri : t -> Uri.t
+  val uri_to_string : t -> string
+  val verb : t -> [< `Delete | `Get | `Patch | `Post | `Put ]
+  val verb_to_string : t -> string
+  val to_string : t -> string
 end
 
 module Css : sig
@@ -35,6 +35,8 @@ module Css : sig
 
   (** TODO: .ml only *)
   val to_attr : t -> 'a attrib
+
+  val to_string : t -> string
 
   module Selector : sig
     type t
@@ -56,7 +58,6 @@ module Swap : sig
       -> direction:[< `Top | `Bottom ]
       -> scroll_behaviour
 
-    (** TODO: .ml only *)
     val scroll_behaviour_to_string : scroll_behaviour -> string
 
     type t =
@@ -77,7 +78,6 @@ module Swap : sig
             focused input, `focus-scroll:false` disables it. *)
       ]
 
-    (** TODO: .ml only *)
     val to_string : t -> string
   end
 
@@ -99,20 +99,37 @@ module Swap : sig
     | `None
     ]
 
+  val strategy_to_string : strategy -> string
+
   type t =
     { strategy : strategy
     ; modifier : Modifier.t option
     }
 
-  (** TODO: .ml only *)
   val to_attr : t -> 'a attrib
 end
 
 module Target : sig
-  type t
+  type t =
+    [ `This
+      (** Indicates that the element that the hx-target attribute is on is the target *)
+    | `Closest of Css.Selector.t
+      (** The closest ancestor element or itself, that matches the given CSS
+          selector (e.g. closest tr will target the closest table row to the element) *)
+    | `Css_selector of Css.Selector.t
+      (** A CSS query selector of the element to target *)
+    | `Find of Css.Selector.t
+      (** The first child descendant element that matches the given CSS selector *)
+    | `Previous of Css.Selector.t
+      (** Scan the DOM backwards for the first element that matches the given CSS
+          selector. (e.g previous .error will target the closest previous sibling
+          with error class *)
+    ]
 
   (** TODO: .ml only *)
   val to_attr : t -> 'a attrib
+
+  val to_string : t -> string
 end
 
 module Trigger : sig
@@ -153,6 +170,8 @@ module Trigger : sig
       | natural_event
       | `Custom of string
       ]
+
+    val to_string : t -> string
   end
 
   module Modifier : sig
@@ -202,18 +221,19 @@ module Trigger : sig
       | non_standard_modifier
       ]
 
-    (** TODO: .ml only *)
     val to_string : t -> string
   end
 
   module Poll : sig
-    (* TODO: Should this be a more complex type? *)
+    (* TODO: Should this be a more complex type? The docs are pretty vague *)
     type condition = string
 
     type t =
       { condition : condition option
       ; interval : [ `Seconds of int | `Milliseconds of int ]
       }
+
+    val to_string : t -> string
   end
 
   type event_trigger =
@@ -225,6 +245,8 @@ module Trigger : sig
 
   (** TODO: .ml only *)
   val to_attr : t -> 'a attrib
+
+  val to_string : t -> string
 end
 
 module Attributes : sig
